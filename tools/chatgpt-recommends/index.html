@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ChatGPT Recommendation Check — Does ChatGPT recommend you? | Nymrel Tools</title>
+<meta name="description" content="See whether ChatGPT recommends your business. Run the questions your customers ask AI, paste the answers, and get a scored verdict. Free, in your browser.">
+<link rel="canonical" href="https://nymrel.com/tools/chatgpt-recommends">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Nymrel Tools">
+<meta property="og:title" content="ChatGPT Recommendation Check — Does ChatGPT recommend you?">
+<meta property="og:description" content="Run the questions your customers ask AI, paste the answers, and get a straight verdict with a score. Free, runs in your browser.">
+<meta property="og:url" content="https://nymrel.com/tools/chatgpt-recommends">
+<meta property="og:image" content="https://nymrel.com/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ChatGPT Recommendation Check — Does ChatGPT recommend you?">
+<meta name="twitter:description" content="Run the questions your customers ask AI, paste the answers, and get a scored verdict on whether ChatGPT recommends you.">
+<meta name="twitter:image" content="https://nymrel.com/assets/og.png">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preload" href="/assets/fonts/instrumentserif-normal-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/instrumentsans-normal-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/fonts/fonts.css">
+<link rel="stylesheet" href="/assets/site.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://nymrel.com/tools/chatgpt-recommends#app",
+      "name": "ChatGPT Recommendation Check",
+      "url": "https://nymrel.com/tools/chatgpt-recommends",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web browser",
+      "description": "A guided checker for whether AI assistants recommend your business. The tool writes the buyer-intent prompts your customers ask; you run them in ChatGPT and paste the answers back; a local scorer grades each one and gives a verdict.",
+      "publisher": {
+        "@id": "https://nymrel.com/#organization"
+      },
+      "offers": [
+        {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD",
+          "name": "Free 3-prompt check"
+        },
+        {
+          "@type": "Offer",
+          "price": "9",
+          "priceCurrency": "USD",
+          "name": "Full Report"
+        }
+      ],
+      "creator": {
+        "@id": "https://nymrel.com/#organization"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Tools",
+          "item": "https://nymrel.com/tools"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "ChatGPT Recommendation Check",
+          "item": "https://nymrel.com/tools/chatgpt-recommends"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does this tool talk to ChatGPT for me?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. You run the prompts yourself — that is the whole point. You see exactly what a real customer sees when they ask an AI assistant who to hire. The tool only writes the questions and scores the text you paste back. It never queries ChatGPT."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my data safe?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Everything is processed in your browser. The answers you paste are saved only in this browser so you don't lose your work; the Reset button clears them. Nothing is sent to a server."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does the score work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For each answer you paste, a local scorer checks whether your business is named: not mentioned scores 0, a plain mention scores 60, leading the answer scores 100, and a mention wrapped in negative context scores 15. Your overall score is the average of the answers you actually paste — never an estimate."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which AI assistants can I use?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Any of them. The prompts are plain questions, so ChatGPT, Claude, Perplexity, and Gemini all work. Paste whichever answer you get — the scorer reads the text the same way regardless of which assistant produced it."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What do I get in the $9 Full Report?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "All 8 buyer-intent prompts written out ready to copy, a breakdown of every answer you paste back, and the fix checklist — llms.txt, FAQ schema, an AI-bot robots allowlist, and entity proof — as a print-ready report, plus a calendar reminder dated 30 days out and a saved baseline. You still run the prompts yourself; the tool never queries an AI for you."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<style>
+  /* prompt cards */
+  .prompts-head { margin: 2.6rem 0 1.2rem; }
+  .prompt-grid { display: grid; gap: 1rem; }
+  .prompt-card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 1.2rem 1.3rem; }
+  .prompt-card .pc-top { display: flex; align-items: center; gap: 12px; margin-bottom: 0.75rem; }
+  .prompt-card .pc-num { font-family: var(--font-mono); font-size: 0.82rem; color: var(--accent); letter-spacing: 0.1em; }
+  .prompt-card .pc-name { font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); }
+  .prompt-card .pc-chipwrap { margin-left: auto; }
+  .pc-prompt { display: flex; align-items: center; gap: 10px; background: var(--bg-deep); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; margin-bottom: 0.7rem; }
+  .pc-prompt .pc-q { font-family: var(--font-mono); font-size: 0.82rem; color: #cfcbc1; flex: 1; word-break: break-word; line-height: 1.5; }
+  .pc-prompt .pc-copy { flex-shrink: 0; }
+  .pc-paste { width: 100%; min-height: 74px; }
+  .pc-demo-tag { margin-top: 7px; }
+
+  /* status pills */
+  .pill { display: inline-block; font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 3px 9px; border-radius: 100px; border: 1px solid var(--line-strong); color: var(--ink-dim); white-space: nowrap; }
+  .pill.ok { border-color: color-mix(in srgb, var(--ok) 60%, transparent); color: var(--ok); background: color-mix(in srgb, var(--ok) 12%, transparent); }
+  .pill.warn { border-color: color-mix(in srgb, var(--warn) 60%, transparent); color: var(--warn); background: color-mix(in srgb, var(--warn) 12%, transparent); }
+  .pill.bad { border-color: color-mix(in srgb, var(--bad) 60%, transparent); color: #e08a7d; background: color-mix(in srgb, var(--bad) 12%, transparent); }
+  .pill.idle { color: var(--ink-faint); }
+
+  /* locked (paid) cards */
+  .prompt-card.locked { border-style: dashed; }
+  .prompt-card.locked .pc-desc { color: var(--ink-dim); font-size: 0.9rem; margin: 0.1rem 0 0; }
+  .lock-tag { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint); }
+  .lock-tag svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 1.6; }
+  .locked-unlock { margin-top: 1rem; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; padding: 1.1rem 1.3rem; border: 1px solid color-mix(in srgb, var(--accent) 32%, transparent); background: var(--accent-dim); border-radius: var(--r-lg); }
+  .locked-unlock p { margin: 0; color: var(--ink-dim); font-size: 0.92rem; flex: 1; min-width: 220px; }
+
+  /* verdict panel */
+  .verdict-body { padding: 1.5rem; }
+  .verdict-badge { text-align: center; padding: 1.4rem 1rem 1.5rem; border: 1px solid var(--line-strong); border-radius: var(--r-lg); background: var(--bg-deep); margin-bottom: 1.1rem; }
+  .verdict-badge .vb-score { font-family: var(--font-display); font-size: 4rem; line-height: 1; color: var(--ink); }
+  .verdict-badge .vb-score small { font-size: 1.05rem; color: var(--ink-faint); font-family: var(--font-mono); }
+  .verdict-badge .vb-band { font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; margin-top: 0.55rem; color: var(--ink-dim); }
+  .verdict-badge.bad { border-color: color-mix(in srgb, var(--bad) 55%, transparent); }
+  .verdict-badge.bad .vb-band { color: #e08a7d; }
+  .verdict-badge.warn { border-color: color-mix(in srgb, var(--warn) 55%, transparent); }
+  .verdict-badge.warn .vb-band { color: var(--warn); }
+  .verdict-badge.brass { border-color: color-mix(in srgb, var(--brass) 55%, transparent); }
+  .verdict-badge.brass .vb-band { color: var(--brass-bright); }
+  .verdict-badge.ok { border-color: color-mix(in srgb, var(--ok) 55%, transparent); }
+  .verdict-badge.ok .vb-band { color: var(--ok); }
+  .verdict-reading { color: var(--ink-dim); font-size: 0.95rem; margin: 0 0 0.4rem; }
+  .chip-list { display: flex; flex-direction: column; gap: 9px; margin: 1.1rem 0 1.2rem; }
+  .chip-row { display: flex; align-items: center; gap: 10px; font-size: 0.82rem; }
+  .chip-row .cr-num { font-family: var(--font-mono); font-size: 0.72rem; color: var(--ink-faint); }
+  .chip-row .cr-label { color: var(--ink-dim); flex: 1; }
+  .chip-row .cr-pill { margin-left: auto; }
+  .verdict-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  /* AI-visibility ladder (funnel) */
+  .ladder { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; margin-top: 1.5rem; }
+  .rung { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 1.5rem; display: flex; flex-direction: column; }
+  .rung.featured { border-color: var(--accent); background: linear-gradient(180deg, var(--accent-dim), var(--panel) 55%); }
+  .rung .rung-step { font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 0.6rem; }
+  .rung h3 { font-size: 1.3rem; margin-bottom: 0.4rem; }
+  .rung .rung-price { font-family: var(--font-mono); font-size: 0.78rem; color: var(--ink-dim); margin-bottom: 0.6rem; }
+  .rung p { color: var(--ink-dim); font-size: 0.92rem; flex: 1; margin: 0 0 1rem; }
+  @media (max-width: 900px) { .ladder { grid-template-columns: 1fr; } }
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Organization","@id":"https://nymrel.com/#organization","email":"contact@nymrel.com","legalName":"JalenBuilds LLC","name":"Nymrel","url":"https://nymrel.com"}
+</script>
+  <script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body data-tool="recommends" data-pro-product="recommends-pro" data-pro-module="recommends-pro">
+
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/"><span class="mark">◆</span> nymrel<span class="sub">/ tool works</span></a>
+    <nav class="primary" aria-label="Primary">
+      <a href="/tools/ai-visibility-scorecard/">Scorecard</a>
+      <a href="/tools/llms-txt-generator/">llms.txt</a>
+      <a href="/tools/json-ld-generator/">JSON-LD</a>
+      <a href="/tools/qr-utm-generator/">QR + UTM</a>
+      <a href="/tools/token-spend-dashboard/">Token Ledger</a>
+      <a href="/tools/chatgpt-recommends/" class="active">ChatGPT Check</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <nav class="crumbs wrap"><a href="/">Tools</a> <span class="sep">/</span> ChatGPT Recommendation Check</nav>
+
+  <section class="hero" style="padding-top:3.5rem">
+    <div class="wrap">
+      <div class="kicker">ChatGPT Check · free · runs in your browser</div>
+      <div class="hero-glyph">
+        <div class="tool-glyph" aria-hidden="true">
+          <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 12a4 4 0 0 1 4-4h24a4 4 0 0 1 4 4v16a4 4 0 0 1-4 4H22l-8 8v-8h-2a4 4 0 0 1-4-4Z"></path>
+            <circle cx="16" cy="20" r="2.5" fill="currentColor" stroke="none"></circle>
+            <path d="M23 20h10M23 26h6" stroke-linecap="round"></path>
+          </svg>
+        </div>
+        <h1 style="max-width:11em;margin-bottom:0">Does ChatGPT recommend you?</h1>
+      </div>
+      <p class="lede">Your customers now ask AI assistants who to hire and where to buy. This shows you exactly what they hear. The tool writes the questions, you run them in ChatGPT, and you paste the answers back for a straight, scored verdict — about ten minutes, free.</p>
+      <div class="rule">You see what a real customer sees — we just score it</div>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="workbench">
+      <div class="controls">
+        <div class="hint-once" id="recHint">
+          <span>Three prompts, ten minutes: copy each into ChatGPT, paste what it says back here.</span>
+          <button class="hx" id="recHintClose" type="button" aria-label="Dismiss hint">×</button>
+        </div>
+
+        <button class="try-btn" id="tryExampleBtn" type="button" style="margin-bottom:1.1rem">
+          <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M12 3l1.8 4.6L18 9l-4.2 1.4L12 15l-1.8-4.6L6 9l4.2-1.4z"></path></svg>
+          Try an example
+        </button>
+
+        <label class="field">
+          <span class="lab">What's your business called? * <span class="code-chip">business name</span></span>
+          <input type="text" id="bizName" placeholder="Sunrise Roast" autocomplete="off" required>
+          <span class="field-msg" id="bizNameMsg" aria-live="polite" hidden></span>
+        </label>
+        <label class="field">
+          <span class="lab">Where are you? * <span class="code-chip">city or area</span></span>
+          <input type="text" id="bizCity" placeholder="Portland" autocomplete="off" required>
+          <span class="field-msg" id="bizCityMsg" aria-live="polite" hidden></span>
+        </label>
+        <label class="field">
+          <span class="lab">What do you do? * <span class="code-chip">category</span></span>
+          <input type="text" id="bizCat" placeholder="wedding photographer" autocomplete="off" required>
+          <span class="field-msg" id="bizCatMsg" aria-live="polite" hidden></span>
+        </label>
+        <label class="field">
+          <span class="lab">Any rivals worth checking? <span class="code-chip">competitors</span></span>
+          <input type="text" id="bizComp" placeholder="Blue Door Beans, Acme Co (up to 3)" autocomplete="off">
+          <span class="field-msg" id="bizCompMsg" aria-live="polite" hidden></span>
+        </label>
+        <p class="help">Comma-separated, optional. Used only in the head-to-head prompt. We keep the first three.</p>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:0.6rem">
+          <button class="btn btn-ghost" id="resetBtn" type="button">Reset everything</button>
+        </div>
+      </div>
+
+      <div class="output">
+        <div class="bench-head">
+          <span><span class="dot"></span>Your AI verdict</span>
+          <span id="scoreMeta" class="mono" style="font-size:0.68rem">No answers yet</span>
+        </div>
+        <div class="verdict-body">
+          <div class="empty-state" id="verdictEmpty">
+            <div class="tool-glyph" aria-hidden="true">
+              <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 12a4 4 0 0 1 4-4h24a4 4 0 0 1 4 4v16a4 4 0 0 1-4 4H22l-8 8v-8h-2a4 4 0 0 1-4-4Z"></path>
+                <circle cx="16" cy="20" r="2.5" fill="currentColor" stroke="none"></circle>
+                <path d="M23 20h10M23 26h6" stroke-linecap="round"></path>
+              </svg>
+            </div>
+            <p class="es-line">No answers yet.</p>
+            <p class="es-hint" id="verdictEmptyHint">ChatGPT can't recommend what you haven't asked it about. Fill in your details, then run the three prompts below.</p>
+          </div>
+
+          <div id="verdictResult" hidden>
+            <div class="verdict-badge bad" id="verdictBadge">
+              <div class="vb-score" id="vbScore">0<small>/100</small></div>
+              <div class="vb-band" id="vbBand">Invisible to AI</div>
+            </div>
+            <p class="verdict-reading" id="verdictReading"></p>
+            <div class="chip-list" id="chipList"></div>
+            <div class="verdict-actions">
+              <button class="btn btn-primary" id="downloadCardBtn" type="button">Download result card</button>
+              <button class="btn btn-ghost" id="resetBtn2" type="button">Reset</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prompts-head">
+      <div class="kicker">The prompts</div>
+      <h2 style="margin-bottom:0.4rem">Run these in ChatGPT, paste the answers</h2>
+      <p style="color:var(--ink-dim);max-width:44em;margin:0">Copy each prompt, ask ChatGPT (or Claude, Perplexity, Gemini), then paste its answer back. The first three are free. Each answer is scored the moment you paste it.</p>
+    </div>
+
+    <div class="prompt-grid" id="promptGrid">
+
+      <div class="prompt-card" id="card1">
+        <div class="pc-top">
+          <span class="pc-num">01</span>
+          <span class="pc-name">Best in town</span>
+          <span class="pc-chipwrap"><span class="pill idle" id="chip1">Awaiting answer</span></span>
+        </div>
+        <div class="pc-prompt">
+          <span class="pc-q" id="q1">Fill in your details above to build this prompt.</span>
+          <button class="btn btn-sm pc-copy" id="copy1" type="button" disabled>Copy prompt</button>
+        </div>
+        <textarea class="pc-paste" id="paste1" placeholder="Paste the answer here" aria-label="Paste the answer to prompt 1"></textarea>
+        <span class="tag brass pc-demo-tag" id="demoTag" hidden>demo text — not a real ChatGPT answer</span>
+      </div>
+
+      <div class="prompt-card" id="card2">
+        <div class="pc-top">
+          <span class="pc-num">02</span>
+          <span class="pc-name">Who should I hire</span>
+          <span class="pc-chipwrap"><span class="pill idle" id="chip2">Awaiting answer</span></span>
+        </div>
+        <div class="pc-prompt">
+          <span class="pc-q" id="q2">Fill in your details above to build this prompt.</span>
+          <button class="btn btn-sm pc-copy" id="copy2" type="button" disabled>Copy prompt</button>
+        </div>
+        <textarea class="pc-paste" id="paste2" placeholder="Paste the answer here" aria-label="Paste the answer to prompt 2"></textarea>
+      </div>
+
+      <div class="prompt-card" id="card3">
+        <div class="pc-top">
+          <span class="pc-num">03</span>
+          <span class="pc-name">Legit check</span>
+          <span class="pc-chipwrap"><span class="pill idle" id="chip3">Awaiting answer</span></span>
+        </div>
+        <div class="pc-prompt">
+          <span class="pc-q" id="q3">Fill in your details above to build this prompt.</span>
+          <button class="btn btn-sm pc-copy" id="copy3" type="button" disabled>Copy prompt</button>
+        </div>
+        <textarea class="pc-paste" id="paste3" placeholder="Paste the answer here" aria-label="Paste the answer to prompt 3"></textarea>
+      </div>
+
+      <div class="prompt-card locked">
+        <div class="pc-top">
+          <span class="pc-num">04</span>
+          <span class="pc-name">Reviews check</span>
+          <span class="pc-chipwrap"><span class="lock-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>Full Report</span></span>
+        </div>
+        <p class="pc-desc">What people say about you when a customer asks for reviews — the reputation prompt.</p>
+      </div>
+
+      <div class="prompt-card locked">
+        <div class="pc-top">
+          <span class="pc-num">05</span>
+          <span class="pc-name">Head-to-head vs your competitor</span>
+          <span class="pc-chipwrap"><span class="lock-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>Full Report</span></span>
+        </div>
+        <p class="pc-desc">You against a named rival — which one the AI tells the customer to pick, and why.</p>
+      </div>
+
+      <div class="prompt-card locked">
+        <div class="pc-top">
+          <span class="pc-num">06</span>
+          <span class="pc-name">Top-3 shortlist</span>
+          <span class="pc-chipwrap"><span class="lock-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>Full Report</span></span>
+        </div>
+        <p class="pc-desc">Whether you make the top-three list when a customer asks for a shortlist in your area.</p>
+      </div>
+
+      <div class="prompt-card locked">
+        <div class="pc-top">
+          <span class="pc-num">07</span>
+          <span class="pc-name">Worth-it check</span>
+          <span class="pc-chipwrap"><span class="lock-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>Full Report</span></span>
+        </div>
+        <p class="pc-desc">The "is it worth hiring them?" question — the last check a customer runs before booking.</p>
+      </div>
+
+      <div class="prompt-card locked">
+        <div class="pc-top">
+          <span class="pc-num">08</span>
+          <span class="pc-name">Where should I go</span>
+          <span class="pc-chipwrap"><span class="lock-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>Full Report</span></span>
+        </div>
+        <p class="pc-desc">The casual "where should I go for this?" ask — the everyday recommendation moment.</p>
+      </div>
+
+      <div class="locked-unlock">
+        <p>Prompts 04–08 come with the Full Report: all eight buyer-intent prompts written out, a breakdown of every answer you paste back, and the fix checklist as a print-ready report.</p>
+        <button class="btn btn-primary" data-buy="recommends-pro">Unlock all 8 prompts — $9</button>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="action-bar" id="recActionBar" hidden>
+    <button class="btn btn-primary" id="downloadCardBtnMobile" type="button">Download result card</button>
+    <button class="btn" id="resetBtnMobile" type="button">Reset</button>
+  </div>
+
+  <section class="section wrap">
+    <div class="kicker">How it works</div>
+    <h2 style="margin-bottom:1.6rem">You ask. AI answers. We score it.</h2>
+    <div class="grid-3">
+      <div class="panel">
+        <div class="kicker" style="margin-bottom:0.6rem">01 · Copy</div>
+        <p style="margin:0;color:var(--ink-dim)">We write the questions your customers actually type — "best coffee roaster in Portland", "is Sunrise Roast legit". Copy one.</p>
+      </div>
+      <div class="panel">
+        <div class="kicker" style="margin-bottom:0.6rem">02 · Ask</div>
+        <p style="margin:0;color:var(--ink-dim)">Paste it into ChatGPT — or Claude, Perplexity, Gemini. You see the real answer, the same one a customer sees. Nothing is faked.</p>
+      </div>
+      <div class="panel">
+        <div class="kicker" style="margin-bottom:0.6rem">03 · Score</div>
+        <p style="margin:0;color:var(--ink-dim)">Paste the answer back. The scorer checks whether you're named, whether you lead, or whether it's bad news — and gives a verdict.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="kicker">Scored low? Here's the ladder</div>
+    <h2 style="margin-bottom:0.4rem">Three ways up, cheapest first</h2>
+    <p style="color:var(--ink-dim);max-width:44em">If AI isn't recommending you yet, the fix is real work — not a trick. Start free.</p>
+    <div class="ladder">
+      <div class="rung">
+        <div class="rung-step">Rung 1 · free</div>
+        <h3>Find out why</h3>
+        <div class="rung-price">$0</div>
+        <p>Run the AI Visibility Scorecard to see the twenty things that decide whether AI can see you — robots rules, structured data, llms.txt — ranked by what to fix first.</p>
+        <a class="btn" href="/tools/ai-visibility-scorecard/">Open the Scorecard</a>
+      </div>
+      <div class="rung featured">
+        <div class="rung-step">Rung 2 · $9</div>
+        <h3>Full Report</h3>
+        <div class="rung-price">$9 one-time</div>
+        <p>All 8 prompts written out for you to run, a breakdown of every answer you paste back, and the fix checklist — llms.txt, FAQ schema, an AI-bot robots allowlist, entity proof — as a print-ready report, plus a dated 30-day recheck reminder and a saved baseline.</p>
+        <button class="btn btn-primary" data-buy="recommends-pro">Get the Full Report — $9</button>
+      </div>
+      <div class="rung">
+        <div class="rung-step">Rung 3 · $500</div>
+        <h3>Have us check the whole site</h3>
+        <div class="rung-price">$500 one-time</div>
+        <p>The Agent-Ready Audit: we probe your live site against the checks the three readers use — classic search, AI answer engines, and the agents that now do the finding — then send you a dated report with the fixes in the order they matter. We find and rank the work. We do not make the changes for you; implementation is quoted separately once you have the list. No one can promise an AI will name you. What we remove is the technical reason it skips you.</p>
+        <a class="btn" href="https://nymrel.com/agent-ready">See the Agent-Ready Audit</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section wrap" aria-label="Optional accuracy check">
+    <div class="kicker">When the answers come back wrong</div>
+    <h2 style="margin-bottom:0.6rem">Check the claims against your real record</h2>
+    <p class="lede" style="font-size:1.05rem">The free checker still gives you the complete three-prompt verdict. If an answer is wrong, missing, or damaging, Nymrel's $299–$499 AI Answer Accuracy Check compares it with your verifiable facts and returns a dated discrepancy report plus a plain fix plan. It does not promise rankings, traffic, or placement in an AI answer.</p>
+    <a class="btn" href="https://nymrel.com/verified">See the $299–$499 Accuracy Check</a>
+  </section>
+
+  <section class="section wrap">
+    <div class="kicker">Pricing</div>
+    <h2 style="margin-bottom:1.6rem">Free to check. $9 for the full picture.</h2>
+    <div class="pricing">
+      <div class="price-card">
+        <div class="tier">Free 3-prompt check</div>
+        <div class="amount">$0</div>
+        <ul>
+          <li>Three buyer-intent prompts, ready to copy</li>
+          <li>Live per-prompt scoring as you paste</li>
+          <li>Verdict badge and overall score</li>
+          <li>Downloadable result card (PNG)</li>
+          <li>Your work saved in your own browser</li>
+        </ul>
+        <p style="color:var(--ink-faint);font-size:0.85rem;margin:0">No account. No email gate. No trial clock.</p>
+      </div>
+      <div class="price-card featured">
+        <div class="tier">Full Report</div>
+        <div class="amount">$9 <small>one-time</small></div>
+        <ul>
+          <li>All 8 buyer-intent prompts, not just 3</li>
+          <li>Per-prompt breakdown of where you stand</li>
+          <li>Fix checklist: llms.txt, FAQ schema, AI-bot allowlist, entity proof</li>
+          <li>Print-ready report you can hand to anyone</li>
+          <li>A dated 30-day recheck reminder, plus a saved baseline to compare against</li>
+          <li>Unlocks on this page and downloads right after checkout</li>
+        </ul>
+        <button class="btn btn-primary" data-buy="recommends-pro">Get the Full Report — $9</button>
+        <p class="help" style="color:var(--ink-faint);font-size:0.85rem;margin:0.9rem 0 0">Fill in your brand, website, and category above first — the report is built from your own inputs, in your browser.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="kicker">Questions, answered plainly</div>
+    <h2 style="margin-bottom:1.5rem">Before you ask</h2>
+    <div class="faq">
+      <details>
+        <summary>Does this tool talk to ChatGPT for me?</summary>
+        <p class="a">No. You run the prompts yourself — that's the whole point. You see exactly what a real customer sees when they ask an AI assistant who to hire. The tool only writes the questions and scores the text you paste back. It never queries ChatGPT, and it never pretends to.</p>
+      </details>
+      <details>
+        <summary>Is my data safe?</summary>
+        <p class="a">Yes. Everything is processed in your browser. The answers you paste are saved only in this browser so you don't lose your work; the Reset button clears them. Nothing is sent to a server.</p>
+      </details>
+      <details>
+        <summary>How does the score work?</summary>
+        <p class="a">For each answer you paste, the scorer checks whether your business is named: not mentioned scores 0, a plain mention scores 60, leading the answer scores 100, and a mention wrapped in negative context (words like "avoid" or "complaints" near your name) scores 15. Your overall score is the average of the answers you actually paste — never an estimate.</p>
+      </details>
+      <details>
+        <summary>Which AI assistants can I use?</summary>
+        <p class="a">Any of them. The prompts are plain questions, so ChatGPT, Claude, Perplexity, and Gemini all work. Paste whichever answer you get — the scorer reads the text the same way regardless of which assistant produced it.</p>
+      </details>
+      <details>
+        <summary>What do I get in the $9 Full Report?</summary>
+        <p class="a">All 8 buyer-intent prompts written out ready to copy, a breakdown of every answer you paste back, and the fix checklist — llms.txt, FAQ schema, an AI-bot robots allowlist, and entity proof — as a print-ready report. It also includes a calendar reminder dated 30 days out and a saved baseline file, so the recheck is a real before-and-after. You still run the prompts yourself; the tool never queries an AI for you.</p>
+      </details>
+    </div>
+  </section>
+</main>
+
+<footer class="site">
+  <div class="wrap cols">
+    <div>
+      <p class="fh">Nymrel Tools</p>
+      <p style="max-width:26em">Small, sharp tools from a working studio. Everything runs in your browser; nothing you paste leaves your device.</p>
+      <p class="mono" style="font-size:0.78rem">© <span data-year>2026</span> JalenBuilds LLC</p>
+      <p class="mono" style="font-size:0.78rem"><a href="https://nymrel.com?utm_source=jalenbuilds-tools&amp;utm_medium=footer-credit&amp;utm_campaign=built-by-nymrel" rel="author">Built by Nymrel</a></p>
+    </div>
+    <div>
+      <p class="fh">Catalog</p>
+      <ul>
+        <li><a href="/tools/ai-visibility-scorecard/">AI Visibility Scorecard</a></li>
+        <li><a href="/tools/llms-txt-generator/">llms.txt Generator</a></li>
+        <li><a href="/tools/json-ld-generator/">JSON-LD Studio</a></li>
+        <li><a href="/tools/qr-utm-generator/">QR + UTM Studio</a></li>
+        <li><a href="/tools/token-spend-dashboard/">Token Ledger</a></li>
+        <li><a href="/tools/chatgpt-recommends/">ChatGPT Check</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="fh">Studio</p>
+      <ul>
+        <li><a href="mailto:contact@nymrel.com">contact@nymrel.com</a></li>
+        <li><a href="/llms.txt">llms.txt</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<canvas id="cardCanvas" width="1200" height="630" style="display:none" aria-hidden="true"></canvas>
+
+<script src="/assets/checkout-config.js"></script>
+<script src="/assets/site.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- element handles ---------- */
+  var nameEl = document.getElementById('bizName');
+  var cityEl = document.getElementById('bizCity');
+  var catEl  = document.getElementById('bizCat');
+  var compEl = document.getElementById('bizComp');
+
+  var paste = [
+    document.getElementById('paste1'),
+    document.getElementById('paste2'),
+    document.getElementById('paste3')
+  ];
+  var chips = [
+    document.getElementById('chip1'),
+    document.getElementById('chip2'),
+    document.getElementById('chip3')
+  ];
+  var qEls = [
+    document.getElementById('q1'),
+    document.getElementById('q2'),
+    document.getElementById('q3')
+  ];
+  var copyBtns = [
+    document.getElementById('copy1'),
+    document.getElementById('copy2'),
+    document.getElementById('copy3')
+  ];
+
+  var verdictEmpty  = document.getElementById('verdictEmpty');
+  var verdictResult = document.getElementById('verdictResult');
+  var verdictBadge  = document.getElementById('verdictBadge');
+  var vbScore       = document.getElementById('vbScore');
+  var vbBand        = document.getElementById('vbBand');
+  var verdictReading= document.getElementById('verdictReading');
+  var chipList      = document.getElementById('chipList');
+  var scoreMeta     = document.getElementById('scoreMeta');
+  var verdictEmptyHint = document.getElementById('verdictEmptyHint');
+
+  var demoTag = document.getElementById('demoTag');
+  var hintEl  = document.getElementById('recHint');
+  var hintCloseBtn = document.getElementById('recHintClose');
+
+  var PROMPT_LABELS = ['Best in town', 'Who should I hire', 'Legit check'];
+  var INPUTS_KEY  = 'jbt.recommends.inputs';
+  var ANSWERS_KEY = 'jbt.recommends.answers';
+  var HINT_KEY    = 'jbt.recommends.hinted';
+
+  /* ---------- prompt builders (free 1-3) ---------- */
+  function buildPrompts(v) {
+    return [
+      'best ' + v.cat + ' in ' + v.city,
+      'I need a ' + v.cat + ' in ' + v.city + ' — who should I hire and why?',
+      'is ' + v.name + ' legit?'
+    ];
+  }
+
+  function readInputs() {
+    return {
+      name: (nameEl.value || '').trim(),
+      city: (cityEl.value || '').trim(),
+      cat:  (catEl.value  || '').trim(),
+      comp: parseCompetitors(compEl.value)
+    };
+  }
+
+  function parseCompetitors(raw) {
+    var parts = String(raw || '').split(',').map(function (s) { return s.trim(); }).filter(Boolean);
+    return parts.slice(0, 3);
+  }
+
+  function inputsReady(v) {
+    return !!(v.name && v.city && v.cat);
+  }
+
+  /* ================= SCORER (deterministic, client-side) ================= */
+  function normalize(s) {
+    return String(s == null ? '' : s)
+      .toLowerCase()
+      .replace(/[‘’“”]/g, "'")
+      .replace(/[^a-z0-9&'\s-]+/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function escapeRe(s) {
+    return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  /* whole-phrase variants, tolerant of a leading "the" */
+  function phraseVariants(raw) {
+    var n = normalize(raw);
+    if (!n) return [];
+    var out = [n];
+    if (n.indexOf('the ') === 0) out.push(n.slice(4));
+    return out;
+  }
+
+  /* earliest whole-phrase match of any variant; returns {pos,len} in normalized string or null */
+  function findPhrase(norm, variants) {
+    var best = null;
+    for (var i = 0; i < variants.length; i++) {
+      var v = variants[i];
+      if (!v) continue;
+      var re = new RegExp('(^|[^a-z0-9])' + escapeRe(v) + '([^a-z0-9]|$)');
+      var m = re.exec(norm);
+      if (m) {
+        var pos = m.index + m[1].length;
+        if (!best || pos < best.pos) best = { pos: pos, len: v.length };
+      }
+    }
+    return best;
+  }
+
+  function earliestCompetitorPos(norm, competitors) {
+    var best = -1;
+    (competitors || []).forEach(function (c) {
+      var f = findPhrase(norm, phraseVariants(c));
+      if (f && (best === -1 || f.pos < best)) best = f.pos;
+    });
+    return best;
+  }
+
+  var NEG_RE = /(^|[^a-z])(scams?|avoid|beware|frauds?|fraudulent|complaints?|lawsuits?|not\s+recommend(ed)?|poor\s+reviews|bad\s+reviews|mixed\s+reviews)([^a-z]|$)/;
+
+  /* returns { status, score } — status in idle|absent|mentioned|leads|negative */
+  function scoreAnswer(answer, nameRaw, competitors) {
+    var norm = normalize(answer);
+    if (!norm) return { status: 'idle', score: null };
+
+    var hit = findPhrase(norm, phraseVariants(nameRaw));
+    if (!hit) return { status: 'absent', score: 0 };
+
+    /* negative context within ~120 chars of the mention */
+    var winStart = Math.max(0, hit.pos - 120);
+    var winEnd = Math.min(norm.length, hit.pos + hit.len + 120);
+    var around = norm.slice(winStart, winEnd);
+    if (NEG_RE.test(around)) return { status: 'negative', score: 15 };
+
+    /* leads: first mention within the first quarter AND before any competitor mention */
+    var compPos = earliestCompetitorPos(norm, competitors);
+    var inFirstQuarter = hit.pos < (norm.length / 4);
+    var beforeCompetitor = (compPos === -1) || (hit.pos < compPos);
+    if (inFirstQuarter && beforeCompetitor) return { status: 'leads', score: 100 };
+
+    return { status: 'mentioned', score: 60 };
+  }
+
+  var STATUS_META = {
+    idle:      { text: 'Awaiting answer',   cls: 'idle' },
+    absent:    { text: 'Not mentioned',     cls: 'bad'  },
+    mentioned: { text: 'Mentioned',         cls: 'warn' },
+    leads:     { text: 'Leads the answer',  cls: 'ok'   },
+    negative:  { text: 'Negative context',  cls: 'bad'  }
+  };
+
+  function band(score) {
+    if (score < 25) return { key: 'bad',   word: 'Invisible to AI', reading: "Right now, when your customers ask AI who to hire, your name doesn't come up." };
+    if (score < 55) return { key: 'warn',  word: 'On the radar',    reading: "You get a mention, but you're one of the crowd — not the answer." };
+    if (score < 80) return { key: 'brass', word: 'In the running',  reading: "You show up and make the shortlist. Close, but not locked in." };
+    return { key: 'ok', word: 'Recommended', reading: "When customers ask, AI points them to you. That's the goal." };
+  }
+
+  /* ================= UI update ================= */
+  function setChip(el, status) {
+    var m = STATUS_META[status] || STATUS_META.idle;
+    el.className = 'pill ' + m.cls;
+    el.textContent = m.text;
+  }
+
+  function setActionBar(on) {
+    document.body.classList.toggle('has-action-bar', !!on);
+    var bar = document.getElementById('recActionBar');
+    if (bar) bar.hidden = !on;
+  }
+
+  function updatePrompts() {
+    var v = readInputs();
+    var ready = inputsReady(v);
+    if (ready) {
+      var built = buildPrompts(v);
+      for (var i = 0; i < 3; i++) {
+        qEls[i].textContent = built[i];
+        copyBtns[i].disabled = false;
+      }
+    } else {
+      for (var j = 0; j < 3; j++) {
+        qEls[j].textContent = 'Fill in your details above to build this prompt.';
+        copyBtns[j].disabled = true;
+      }
+    }
+    return v;
+  }
+
+  function recompute() {
+    var v = updatePrompts();
+
+    /* keep the audit mailto in sync with the latest score (set at the end) */
+    if (!inputsReady(v)) {
+      /* still score any pasted answers we can (name needed) — without a name, nothing to score */
+      for (var k = 0; k < 3; k++) setChip(chips[k], paste[k].value.trim() ? 'idle' : 'idle');
+      showEmpty("ChatGPT can't recommend what you haven't asked it about. Fill in your details, then run the three prompts below.");
+      updateAuditLink(null);
+      return;
+    }
+
+    var results = [];
+    var pastedScores = [];
+    for (var i = 0; i < 3; i++) {
+      var r = scoreAnswer(paste[i].value, v.name, v.comp);
+      results.push(r);
+      setChip(chips[i], r.status);
+      if (r.score !== null) pastedScores.push(r.score);
+    }
+
+    if (pastedScores.length === 0) {
+      showEmpty("ChatGPT can't recommend what you haven't asked it about. Copy prompt 01 into ChatGPT, then paste the answer back.");
+      updateAuditLink(null);
+      return;
+    }
+
+    var overall = Math.round(pastedScores.reduce(function (a, b) { return a + b; }, 0) / pastedScores.length);
+    var b = band(overall);
+
+    verdictBadge.className = 'verdict-badge ' + b.key;
+    vbScore.innerHTML = overall + '<small>/100</small>';
+    vbBand.textContent = b.word;
+    verdictReading.textContent = b.reading;
+    scoreMeta.textContent = 'based on ' + pastedScores.length + ' of 3 answers';
+
+    /* per-prompt chip list */
+    chipList.innerHTML = '';
+    for (var c = 0; c < 3; c++) {
+      var m = STATUS_META[results[c].status] || STATUS_META.idle;
+      var row = document.createElement('div');
+      row.className = 'chip-row';
+      var num = document.createElement('span');
+      num.className = 'cr-num';
+      num.textContent = '0' + (c + 1);
+      var lab = document.createElement('span');
+      lab.className = 'cr-label';
+      lab.textContent = PROMPT_LABELS[c];
+      var pill = document.createElement('span');
+      pill.className = 'cr-pill pill ' + m.cls;
+      pill.textContent = m.text;
+      row.appendChild(num);
+      row.appendChild(lab);
+      row.appendChild(pill);
+      chipList.appendChild(row);
+    }
+
+    verdictEmpty.hidden = true;
+    verdictResult.hidden = false;
+    setActionBar(true);
+    updateAuditLink(overall);
+    lastVerdict = { score: overall, band: b, name: v.name };
+  }
+
+  function showEmpty(hintText) {
+    if (verdictEmptyHint && hintText) verdictEmptyHint.textContent = hintText;
+    verdictResult.hidden = true;
+    verdictEmpty.hidden = false;
+    scoreMeta.textContent = 'No answers yet';
+    setActionBar(false);
+    lastVerdict = null;
+  }
+
+  var lastVerdict = null;
+
+  /* Rung 3 used to be a $349 "we do the whole fix for you" offer reachable only
+     by mailto. It had no intake, no deliverable template, no order record and no
+     turnaround anyone had agreed to — and it undercut the $1,500–$2,500 fix
+     sprint that sells exactly that implementation work. It was retired rather
+     than reworded. Rung 3 now points at the Agent-Ready Audit, which is a real
+     product with a checkout, a webhook and a dated deliverable. The score no
+     longer personalises anything, so this is deliberately inert. */
+  function updateAuditLink(_score) {}
+
+  /* ---------- inline validation for required fields ---------- */
+  function wireRequired(el, msgEl, missingMsg) {
+    el.addEventListener('input', function () {
+      el.dataset.touched = '1';
+      el.classList.remove('err');
+      if (el.value.trim()) el.classList.add('ok'); else el.classList.remove('ok');
+      if (msgEl) msgEl.hidden = true;
+      clearDemoIfEditing();
+      persistInputs();
+      recompute();
+    });
+    el.addEventListener('blur', function () {
+      if (el.dataset.touched !== '1' || !msgEl) return;
+      if (!el.value.trim()) {
+        el.classList.add('err');
+        el.classList.remove('ok');
+        msgEl.className = 'field-msg err';
+        msgEl.textContent = missingMsg;
+        msgEl.hidden = false;
+      }
+    });
+  }
+  wireRequired(nameEl, document.getElementById('bizNameMsg'), 'Needed for the "is it legit" and reviews prompts.');
+  wireRequired(cityEl, document.getElementById('bizCityMsg'), 'Needed — the prompts ask "in {your city}".');
+  wireRequired(catEl,  document.getElementById('bizCatMsg'),  'Needed — like "wedding photographer" or "coffee roaster".');
+
+  var compMsg = document.getElementById('bizCompMsg');
+  compEl.addEventListener('input', function () {
+    var parts = String(compEl.value || '').split(',').map(function (s) { return s.trim(); }).filter(Boolean);
+    if (parts.length > 3) {
+      compMsg.className = 'field-msg';
+      compMsg.textContent = 'Keeping the first three — AI answers rarely name more.';
+      compMsg.hidden = false;
+    } else {
+      compMsg.hidden = true;
+    }
+    clearDemoIfEditing();
+    persistInputs();
+    recompute();
+  });
+
+  /* ---------- paste textareas ---------- */
+  paste.forEach(function (ta, idx) {
+    ta.addEventListener('input', function () {
+      if (idx === 0) clearDemo();
+      persistAnswers();
+      recompute();
+    });
+  });
+
+  /* ---------- copy prompt buttons ---------- */
+  copyBtns.forEach(function (btn, idx) {
+    btn.addEventListener('click', function () {
+      if (btn.disabled) return;
+      var text = qEls[idx].textContent;
+      JB.copy(text, 'Prompt copied — paste it into ChatGPT, then bring the answer back');
+    });
+  });
+
+  /* ---------- demo / try-example ---------- */
+  var DEMO_ANSWER = "[demo answer] Sunrise Roast is widely considered the best coffee roaster in Portland — small-batch beans, consistently strong reviews, and a cozy taproom locals love. You might also look at Blue Door Beans, but most people point to Sunrise Roast first.";
+
+  function clearDemo() {
+    if (demoTag) demoTag.hidden = true;
+  }
+  function clearDemoIfEditing() {
+    /* editing the inputs after a demo means it's no longer the canned example */
+    if (demoTag && !demoTag.hidden) demoTag.hidden = true;
+  }
+
+  var tryExampleBtn = document.getElementById('tryExampleBtn');
+  tryExampleBtn.addEventListener('click', function () {
+    nameEl.value = 'Sunrise Roast';
+    cityEl.value = 'Portland';
+    catEl.value  = 'coffee roaster';
+    compEl.value = 'Blue Door Beans';
+    [nameEl, cityEl, catEl].forEach(function (el) { el.dataset.touched = '1'; el.classList.add('ok'); el.classList.remove('err'); });
+    document.getElementById('bizNameMsg').hidden = true;
+    document.getElementById('bizCityMsg').hidden = true;
+    document.getElementById('bizCatMsg').hidden = true;
+    compMsg.hidden = true;
+
+    paste[0].value = DEMO_ANSWER;
+    if (demoTag) demoTag.hidden = false;
+
+    persistInputs();
+    persistAnswers();
+    recompute();
+    JB.toast('Example filled in — edit any field to make it yours');
+  });
+
+  /* ---------- share card (canvas 1200x630) ---------- */
+  var BAND_HEX = { bad: '#d96a5a', warn: '#e0a458', brass: '#f2bd6f', ok: '#8fbf6f' };
+
+  function slug(s) {
+    return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'result';
+  }
+
+  function wrapText(ctx, text, x, y, maxWidth, lineHeight, maxLines) {
+    var words = String(text).split(' ');
+    var line = '';
+    var lines = 0;
+    for (var i = 0; i < words.length; i++) {
+      var test = line ? line + ' ' + words[i] : words[i];
+      if (ctx.measureText(test).width > maxWidth && line) {
+        ctx.fillText(line, x, y);
+        line = words[i];
+        y += lineHeight;
+        lines++;
+        if (lines >= maxLines - 1) {
+          /* last allowed line: dump the rest, trimmed */
+          var rest = words.slice(i).join(' ');
+          while (ctx.measureText(rest + '…').width > maxWidth && rest.length > 1) rest = rest.slice(0, -1);
+          ctx.fillText(rest + (i < words.length ? '…' : ''), x, y);
+          return;
+        }
+      } else {
+        line = test;
+      }
+    }
+    ctx.fillText(line, x, y);
+  }
+
+  function drawCard() {
+    if (!lastVerdict) { JB.toast('Run at least one prompt first'); return; }
+    var score = lastVerdict.score;
+    var b = lastVerdict.band;
+    var name = lastVerdict.name || 'Your business';
+    if (name.length > 40) name = name.slice(0, 40) + '…';
+
+    var canvas = document.getElementById('cardCanvas');
+    var ctx = canvas.getContext('2d');
+    var W = 1200, H = 630;
+
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#0b0b0e';
+    ctx.fillRect(0, 0, W, H);
+
+    /* thin frame */
+    ctx.strokeStyle = 'rgba(235,232,224,0.14)';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(24, 24, W - 48, H - 48);
+
+    /* kicker */
+    ctx.fillStyle = '#c98ba6';
+    ctx.font = '600 24px "Instrument Sans", Arial, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('C H A T G P T   R E C O M M E N D A T I O N   C H E C K', 80, 96);
+
+    /* ring */
+    var cx = 250, cy = 340, r = 140;
+    ctx.lineWidth = 20;
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = 'rgba(235,232,224,0.12)';
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.strokeStyle = '#c98ba6';
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * (score / 100));
+    ctx.stroke();
+
+    /* score in ring */
+    ctx.fillStyle = '#ebe8e0';
+    ctx.textAlign = 'center';
+    ctx.font = '400 132px Georgia, "Times New Roman", serif';
+    ctx.fillText(String(score), cx, cy + 44);
+    ctx.fillStyle = '#86827a';
+    ctx.font = '400 28px "Instrument Sans", Arial, sans-serif';
+    ctx.fillText('/ 100', cx, cy + 92);
+
+    /* right block */
+    var rx = 470;
+    ctx.textAlign = 'left';
+    ctx.fillStyle = BAND_HEX[b.key] || '#ebe8e0';
+    ctx.font = '400 78px Georgia, "Times New Roman", serif';
+    ctx.fillText(b.word, rx, 300);
+
+    ctx.fillStyle = '#a8a49b';
+    ctx.font = '400 34px "Instrument Sans", Arial, sans-serif';
+    ctx.fillText(name, rx, 356);
+
+    ctx.fillStyle = '#c9c5bc';
+    ctx.font = '400 26px "Instrument Sans", Arial, sans-serif';
+    wrapText(ctx, b.reading, rx, 410, 660, 38, 3);
+
+    /* footer */
+    ctx.fillStyle = '#86827a';
+    ctx.font = '400 22px "Instrument Sans", Arial, sans-serif';
+    ctx.fillText('made with nymrel.com/tools/chatgpt-recommends', 80, H - 60);
+
+    var url;
+    try { url = canvas.toDataURL('image/png'); }
+    catch (e) { JB.toast('Could not render the card'); return; }
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'ai-verdict-' + slug(lastVerdict.name) + '.png';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    JB.toast('Result card downloaded');
+  }
+
+  document.getElementById('downloadCardBtn').addEventListener('click', drawCard);
+  document.getElementById('downloadCardBtnMobile').addEventListener('click', drawCard);
+
+  /* ---------- reset ---------- */
+  function resetAll() {
+    nameEl.value = ''; cityEl.value = ''; catEl.value = ''; compEl.value = '';
+    [nameEl, cityEl, catEl, compEl].forEach(function (el) { el.classList.remove('ok', 'err'); delete el.dataset.touched; });
+    ['bizNameMsg', 'bizCityMsg', 'bizCatMsg', 'bizCompMsg'].forEach(function (id) {
+      var m = document.getElementById(id); if (m) m.hidden = true;
+    });
+    paste.forEach(function (ta) { ta.value = ''; });
+    clearDemo();
+    try { localStorage.removeItem(INPUTS_KEY); localStorage.removeItem(ANSWERS_KEY); } catch (e) {}
+    updatePrompts();
+    for (var i = 0; i < 3; i++) setChip(chips[i], 'idle');
+    showEmpty("ChatGPT can't recommend what you haven't asked it about. Fill in your details, then run the three prompts below.");
+    JB.toast('Cleared — starting fresh');
+    nameEl.focus();
+  }
+  document.getElementById('resetBtn').addEventListener('click', resetAll);
+  document.getElementById('resetBtn2').addEventListener('click', resetAll);
+  document.getElementById('resetBtnMobile').addEventListener('click', resetAll);
+
+  /* ---------- persistence ---------- */
+  function persistInputs() {
+    try {
+      localStorage.setItem(INPUTS_KEY, JSON.stringify({
+        name: nameEl.value, city: cityEl.value, cat: catEl.value, comp: compEl.value
+      }));
+    } catch (e) {}
+  }
+  function persistAnswers() {
+    try {
+      localStorage.setItem(ANSWERS_KEY, JSON.stringify({
+        a1: paste[0].value, a2: paste[1].value, a3: paste[2].value
+      }));
+    } catch (e) {}
+  }
+  function restore() {
+    try {
+      var inp = JSON.parse(localStorage.getItem(INPUTS_KEY) || 'null');
+      if (inp) {
+        if (inp.name) { nameEl.value = inp.name; nameEl.classList.add('ok'); }
+        if (inp.city) { cityEl.value = inp.city; cityEl.classList.add('ok'); }
+        if (inp.cat)  { catEl.value  = inp.cat;  catEl.classList.add('ok'); }
+        if (inp.comp) compEl.value = inp.comp;
+      }
+      var ans = JSON.parse(localStorage.getItem(ANSWERS_KEY) || 'null');
+      if (ans) {
+        if (ans.a1) paste[0].value = ans.a1;
+        if (ans.a2) paste[1].value = ans.a2;
+        if (ans.a3) paste[2].value = ans.a3;
+      }
+    } catch (e) {}
+  }
+
+  /* ---------- first-run hint ---------- */
+  if (hintEl) {
+    try { if (localStorage.getItem(HINT_KEY) === '1') hintEl.hidden = true; } catch (e) {}
+  }
+  if (hintCloseBtn) {
+    hintCloseBtn.addEventListener('click', function () {
+      if (hintEl) hintEl.hidden = true;
+      try { localStorage.setItem(HINT_KEY, '1'); } catch (e) {}
+    });
+  }
+
+  /* ---------- expose scorer for in-page sanity checks + the Pro report ---------- */
+  window.JBRecommends = {
+    scoreAnswer: scoreAnswer,
+    band: band,
+    normalize: normalize,
+    PROMPT_LABELS: PROMPT_LABELS.slice(),
+    getInputs: readInputs,
+    getPrompts: function () { return buildPrompts(readInputs()); },
+    getAnswers: function () { return paste.map(function (ta) { return ta.value; }); }
+  };
+
+  /* ---------- init ---------- */
+  restore();
+  recompute();
+})();
+</script>
+</body>
+</html>
