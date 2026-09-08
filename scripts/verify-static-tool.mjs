@@ -55,7 +55,12 @@ check(
 check(/Vercel Insights/i.test(html), "privacy copy must disclose hosted Vercel Insights analytics");
 check(!/Nothing is sent to a server\.?/i.test(html), "privacy copy must not claim that no server request exists");
 
-const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]);
+// Ignore script source while inspecting IDs; do not transform HTML as if sanitized.
+const scriptRanges = [...html.matchAll(/<script\b[^>]*>[\s\S]*?<\/script\b[^>]*>/gi)]
+  .map((match) => [match.index, match.index + match[0].length]);
+const ids = [...html.matchAll(/\bid="([^"]+)"/g)]
+  .filter((match) => !scriptRanges.some(([start, end]) => match.index >= start && match.index < end))
+  .map((match) => match[1]);
 const duplicateIds = [...new Set(ids.filter((id, index) => ids.indexOf(id) !== index))];
 check(duplicateIds.length === 0, `duplicate element ids: ${duplicateIds.join(", ")}`);
 
