@@ -632,9 +632,10 @@
   /* ================= SCORER (deterministic, client-side) ================= */
   function normalize(s) {
     return String(s == null ? '' : s)
+      .normalize('NFC')
       .toLowerCase()
       .replace(/[‘’“”]/g, "'")
-      .replace(/[^a-z0-9&'\s-]+/g, ' ')
+      .replace(/[^\p{L}\p{M}\p{N}&'\s-]+/gu, ' ')
       .replace(/\s+/g, ' ')
       .trim();
   }
@@ -658,7 +659,7 @@
     for (var i = 0; i < variants.length; i++) {
       var v = variants[i];
       if (!v) continue;
-      var re = new RegExp('(^|[^a-z0-9])' + escapeRe(v) + '([^a-z0-9]|$)');
+      var re = new RegExp('(^|[^\\p{L}\\p{M}\\p{N}])' + escapeRe(v) + '([^\\p{L}\\p{M}\\p{N}]|$)', 'u');
       var m = re.exec(norm);
       if (m) {
         var pos = m.index + m[1].length;
