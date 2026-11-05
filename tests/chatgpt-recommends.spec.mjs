@@ -62,6 +62,21 @@ test("has no serious accessibility violations", async ({ page }) => {
   expect(blocking).toEqual([]);
 });
 
+test("matches international business names using Unicode whole-phrase boundaries", async ({ page }) => {
+  await page.locator("#bizCity").fill("Tokyo");
+  await page.locator("#bizCat").fill("coffee shop");
+  await page.locator("#bizName").fill("東京珈琲");
+  await page.locator("#paste1").fill("東京珈琲 is the leading coffee shop in Tokyo.");
+  await expect(page.locator("#vbScore")).toHaveText("100/100");
+
+  await page.locator("#paste1").fill("東京珈琲店 is the leading coffee shop in Tokyo.");
+  await expect(page.locator("#vbScore")).toHaveText("0/100");
+
+  await page.locator("#bizName").fill("Café Élan");
+  await page.locator("#paste1").fill("CAFE\u0301 E\u0301LAN is the leading coffee shop in Tokyo.");
+  await expect(page.locator("#vbScore")).toHaveText("100/100");
+});
+
 test("stays operable without horizontal overflow", async ({ page }) => {
   await page.locator("#bizName").fill("Example Studio");
   await page.locator("#bizCity").fill("Tacoma");
