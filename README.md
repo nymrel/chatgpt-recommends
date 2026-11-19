@@ -14,6 +14,10 @@ were named, how you were described, and who got named instead.
 
 No account, no API key, no email gate.
 
+Business and competitor names are matched as whole phrases using Unicode letters,
+numbers, and normalized accents. Scoring is a deterministic heuristic; the negative
+context flags use a short list of English phrases, not language or sentiment understanding.
+
 ## Run it locally
 
 The product has no runtime build step or dependencies. The repository adds locked
@@ -69,7 +73,8 @@ adoption, customer outcomes, purchases, or revenue.
 ## Credits
 
 Instrument Serif, Instrument Sans, and IBM Plex Mono are used under the SIL Open
-Font License.
+Font License. Their [copyright notices, license texts, and asset inventory](assets/fonts/README.md)
+are included with the bundled fonts.
 
 ## Who built it
 
